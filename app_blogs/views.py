@@ -47,7 +47,7 @@ def user_detail_view(request, pk):
 def blog_list_create(request):
     if request.method == 'GET':
         blogs = BlogsModel.objects.all()
-        serializer = BlogSerializer(blogs, many=True).data
+        serializer = BlogSerializer(blogs, many=True)
         return Response(serializer.data)
 
     elif request.method == 'POST':
