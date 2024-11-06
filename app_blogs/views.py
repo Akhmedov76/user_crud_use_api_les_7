@@ -10,7 +10,7 @@ from app_blogs.serializers import UsersSerializer, BlogSerializer
 def user_list_view(request):
     if request.method == 'GET':
         users = UsersModel.objects.all()
-        serializer = UsersSerializer(users, many=True).data
+        serializer = UsersSerializer(users, many=True)
         return Response(serializer.data)
 
     elif request.method == 'POST':
