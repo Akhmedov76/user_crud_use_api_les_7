@@ -23,8 +23,11 @@ def user_list_view(request):
 
 @api_view(['PUT', 'PATCH', 'DELETE'])
 def user_detail_view(request, pk):
-    user = UsersModel.objects.get(pk=pk)
-    if request.method in ['PATCH', 'PUT']:
+    user = get_object_or_404(UsersModel, pk=pk)
+    if request.method == 'GET':
+        serializer = UsersSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    elif request.method in ['PATCH', 'PUT']:
         serializer = UsersSerializer(user, data=request.data, partial=(request.method == 'PATCH'))
         serializer.is_valid()
         serializer.save()
@@ -40,7 +43,7 @@ def user_detail_view(request, pk):
             "status": True,
             "message": "User deleted successfully."
         }
-        return Response(response, status=status.HTTP_200_OK)
+        return Response(response, status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET', 'POST'])
@@ -60,10 +63,10 @@ def blog_list_create(request):
 
 @api_view(['PUT', 'PATCH', 'DELETE'])
 def blog_detail_update_delete(request, pk):
-    blog = BlogsModel.objects.get(pk=pk)
+    blog = get_object_or_404(BlogsModel, pk=pk)
     if request.method == 'GET':
-        serializer = UsersSerializer(user)
-        return Response(serializer, status=status.HTTP_200_OK)
+        serializer = BlogSerializer(blog)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     elif request.method in ['PATCH', 'PUT']:
         serializer = BlogSerializer(blog, data=request.data, partial=(request.method == 'PATCH'))
         serializer.is_valid()
@@ -80,4 +83,4 @@ def blog_detail_update_delete(request, pk):
             "status": True,
             "message": "Blog deleted successfully."
         }
-        return Response(response, status=status.HTTP_200_OK)
+        return Response(response, status=status.HTTP_204_NO_CONTENT)
